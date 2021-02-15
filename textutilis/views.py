@@ -16,6 +16,8 @@ def analyze(request):
     capfirst = request.POST.get("capfirst", "off")
     newlineremover=request.POST.get("newlineremover", "off")
     extraspaceremover=request.POST.get("extraspaceremover", "off")
+    numberremover=request.POST.get("numberremover", "off")
+
 
     print(djtext)
     print(removepunc)
@@ -60,11 +62,32 @@ def analyze(request):
         params.update({"extraspaceremover":space_remover})
         djtext=extraspacetext
         #return render(request, "analyze.html", params)
+
+    if (numberremover == "on"):
+        numberremovedtext = ""
+        numbers = '0123456789'
+
+        for char in djtext:
+            if char not in numbers:
+                numberremovedtext = numberremovedtext + char
+
+        numberremover={"purpose":"numberremover","analyzed_text":numberremovedtext}
+
+        params.update({"numberremover":numberremover})
+        djtext =  numberremovedtext
     return render(request,"analyze.html",params)
 
 
 
 
+def aboutus(request):
+
+    return render(request,"aboutus.html")
+
+
+def contactus(request):
+
+    return render(request,"contactus.html")
 
 
 
@@ -73,24 +96,3 @@ def analyze(request):
 
 
 
-"""def capfirst(request):
-    djtext=request.GET.get("text","default")
-    capfirst=request.GET.get("capfirst","off")
-    print(djtext)
-    caps=""
-    if capfirst == "on" :
-        for char in djtext :
-            caps=caps+char.capitalize()
-            
-
-
-    return HttpResponse(caps)
-    """
-"""def newlineremove(request):
-    return HttpResponse("newlineremover <a href='/removepunc/'> back </a>")
-def spaceremove(request):
-    return HttpResponse("spaceremover")
-def charcount(request):
-    return HttpResponse("charcount")
-
-"""
